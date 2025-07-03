@@ -11,27 +11,28 @@ class TaskManager extends React.Component {
     }
 
     componentDidMount() {
-        const container = document.querySelector('.task-manager');
-        if (container) {
-            this.containerRef.current = container;
-        }
-
         // Listen for external tasks from jQuery
-        $(document).on('injectTask', (event) => {
-            if (event.originalEvent.detail && typeof event.originalEvent.detail === 'string') {
-                const newTask = { text: event.originalEvent.detail, completed: false };
+        document.addEventListener('injectTask', (event) => {
+            console.log('Received injectTask event:', event.detail); // Debug log
+            if (event.detail && typeof event.detail === 'string') {
+                const newTask = { text: event.detail, completed: false };
                 this.setState(prev => ({
                     tasks: [...prev.tasks, newTask]
-                }));
-                this.emitTaskCountEvent();
+                }), () => this.emitTaskCountEvent());
             }
         });
+    }
+
+    componentWillUnmount() {
+        // Cleanup event listener
+        document.removeEventListener('injectTask', this.injectTaskHandler);
     }
 
     emitTaskCountEvent = () => {
         const { tasks } = this.state;
         const total = tasks.length;
         const completed = tasks.filter(task => task.completed).length;
+        console.log('Emitting task count:', { total, completed, tasks }); // Debug log
         const event = new CustomEvent('taskCountUpdated', {
             detail: { total, completed }
         });
