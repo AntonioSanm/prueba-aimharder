@@ -86,7 +86,6 @@
             document.addEventListener('taskCountUpdated', function(e) {
                 const { total, completed } = e.detail;
                 $('#task-stats').text(`Total: ${total}, Completed: ${completed}`);
-                console.log('Task count updated:', { total, completed }); // Debug log
             });
         });
     </script>
