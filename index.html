@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <style>
+        .task-manager {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: white;
+        }
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .task-stats {
+            display: flex;
+            gap: 20px;
+        }
+        .task-input {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .task-list {
+            margin-top: 20px;
+        }
+        .task-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .completed {
+            text-decoration: line-through;
+            color: #666;
+        }
+        button {
+            padding: 5px 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script type="module">
+        import TaskManager from './src/components/TaskManager.jsx';
+        
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(React.createElement(TaskManager));
+    </script>
+
+    <script>
+        // jQuery integration example
+        $(document).ready(function() {
+            // Inject a task from jQuery
+            $('#inject-task').on('click', function() {
+                const task = $('#task-input').val();
+                if (task) {
+                    const event = new CustomEvent('injectTask', { detail: task });
+                    document.dispatchEvent(event);
+                    $('#task-input').val('');
+                }
+            });
+
+            // Listen for task count updates
+            $(document).on('taskCountUpdated', function(e) {
+                const { total, completed } = e.detail;
+                $('#task-stats').text(`Total: ${total}, Completed: ${completed}`);
+            });
+        });
+    </script>
+
+    <!-- jQuery injection example -->
+    <div style="margin: 20px;">
+        <h3>jQuery Injection</h3>
+        <input type="text" id="task-input" placeholder="Enter task to inject">
+        <button id="inject-task">Inject Task</button>
+        <div id="task-stats">Task stats will appear here</div>
+    </div>
+</body>
+</html>
